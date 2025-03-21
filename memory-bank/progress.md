@@ -42,6 +42,9 @@
 - MCP inspector support
 - MCP build and run scripts
 - 1Password integration for MCP server authentication
+- Improved API key handling to check only during command execution
+- Enhanced email listing with scheduling information
+- Successfully implemented and tested email scheduling functionality
 
 ## In Progress
 
@@ -52,6 +55,7 @@
 - Documentation
 - Additional analytics features
 - Analytics visualization
+- Email scheduling edge cases
 
 ## To Do
 
@@ -92,6 +96,9 @@
 - ✅ Tool descriptions
 - ✅ Inspector support
 - ✅ 1Password integration
+- ✅ API key handling optimization
+- ✅ Enhanced email listing
+- ✅ Email scheduling functionality
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] Documentation
@@ -130,6 +137,7 @@
 8. Need to add progress indicators
 9. Need to handle rate limiting
 10. Need to test MCP server thoroughly
+11. Need to handle email scheduling edge cases
 
 ## Blockers
 
@@ -147,6 +155,9 @@ Complete Phase 3: MCP Server Implementation
 - ✅ Add tool descriptions
 - ✅ Add inspector support
 - ✅ Add 1Password integration
+- ✅ Optimize API key handling
+- ✅ Enhance email listing
+- ✅ Implement email scheduling
 - [ ] Add tests
 - [ ] Add documentation
 - [ ] Add examples

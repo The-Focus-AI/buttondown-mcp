@@ -2,7 +2,7 @@
 
 ## Project Purpose
 
-The API Integrator project aims to provide a robust, type-safe interface for interacting with the Buttondown API, enabling seamless integration with newsletter management workflows. The project focuses on providing a reliable foundation for building newsletter automation tools and integrations.
+The API Integrator project aims to provide a robust, type-safe interface for interacting with the Buttondown API, enabling seamless integration with newsletter management workflows. The project focuses on providing a reliable foundation for building newsletter automation tools and integrations, with optimized API key handling and comprehensive email scheduling support.
 
 ## Core Problems Solved
 
@@ -10,8 +10,10 @@ The API Integrator project aims to provide a robust, type-safe interface for int
 
    - Type-safe API interactions
    - Consistent error handling
-   - Secure credential management
+   - Secure credential management with lazy validation
    - Reliable request/response handling
+   - Efficient API key validation
+   - Comprehensive email scheduling
 
 2. **Developer Experience**
 
@@ -19,12 +21,16 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Comprehensive testing
    - Clear documentation
    - Type safety
+   - MCP tool support
+   - Enhanced scheduling features
 
 3. **Security**
    - Secure credential storage
-   - API key management
+   - Optimized API key management
    - Request validation
    - Error handling
+   - Lazy validation
+   - Schedule validation
 
 ## User Experience Goals
 
@@ -36,6 +42,8 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Type-safe method calls
    - Clear error messages
    - Comprehensive documentation
+   - MCP tool descriptions
+   - Scheduling utilities
 
 2. **Development Workflow**
 
@@ -43,12 +51,16 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Easy testing
    - Clear debugging
    - Type checking
+   - MCP inspector support
+   - Efficient API key handling
 
 3. **Maintenance**
    - Modular architecture
    - Extensible design
    - Clear patterns
    - Test coverage
+   - Tool composition
+   - Schedule management
 
 ### For End Users
 
@@ -58,6 +70,8 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Proper error handling
    - Graceful degradation
    - Clear feedback
+   - Efficient API key validation
+   - Reliable scheduling
 
 2. **Performance**
 
@@ -65,12 +79,16 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Efficient resource usage
    - Scalable design
    - Caching support
+   - Optimized validation
+   - Quick scheduling
 
 3. **Security**
    - Secure credential handling
    - Data protection
    - Access control
    - Audit trail
+   - Lazy API key validation
+   - Schedule validation
 
 ## Core Features
 
@@ -78,10 +96,12 @@ The API Integrator project aims to provide a robust, type-safe interface for int
 
 1. **API Client**
 
-   - Email listing
+   - Email listing with status filtering
    - Type-safe requests
    - Error handling
-   - Authentication
+   - Optimized authentication
+   - Comprehensive scheduling
+   - Enhanced email information
 
 2. **Testing**
 
@@ -89,21 +109,34 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Mock responses
    - Test fixtures
    - Integration tests
+   - MCP inspector
+   - Schedule validation
 
 3. **Security**
+
    - 1Password integration
    - Environment variables
    - Secure storage
    - HTTPS enforcement
+   - Lazy validation
+   - Schedule verification
+
+4. **MCP Server**
+   - Four core tools implemented
+   - Parameter validation with Zod
+   - Tool descriptions
+   - Inspector support
+   - Enhanced email listing
+   - Scheduling support
 
 ### Planned
 
 1. **Additional Endpoints**
 
-   - Draft management
-   - Scheduling
-   - Analytics
+   - Enhanced analytics
    - Subscriber management
+   - Rate limiting
+   - Response caching
 
 2. **CLI Interface**
 
@@ -111,12 +144,16 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Input validation
    - Output formatting
    - Help documentation
+   - Status filtering
+   - Schedule management
 
-3. **ModelContextProtocol**
-   - Request handling
-   - Response formatting
-   - Error reporting
-   - Documentation
+3. **MCP Enhancements**
+   - Additional tools
+   - Enhanced error handling
+   - Progress indicators
+   - Rate limiting
+   - Response caching
+   - Schedule optimization
 
 ## User Workflows
 
@@ -126,15 +163,45 @@ The API Integrator project aims to provide a robust, type-safe interface for int
 
    ```typescript
    const api = new ButtondownAPI();
-   const emails = await api.getEmails();
+   const emails = await api.getEmails({ status: "scheduled" });
+   await api.scheduleDraft(draftId, "2025-03-28T09:15:00Z");
    ```
 
 2. **Testing**
+
    ```typescript
-   describe("ButtondownAPI", () => {
-     it("should fetch emails", async () => {
-       // Test implementation
+   describe("ButtondownMCP", () => {
+     it("should list scheduled emails", async () => {
+       const result = await mcp.listEmails({ status: "scheduled" });
+       expect(result).toContain("publish_date");
      });
+
+     it("should schedule draft", async () => {
+       const result = await mcp.scheduleDraft({
+         draftId,
+         scheduledTime: "2025-03-28T09:15:00Z",
+       });
+       expect(result.status).toBe("scheduled");
+     });
+   });
+   ```
+
+3. **MCP Usage**
+
+   ```typescript
+   // List scheduled emails
+   await mcp.handleRequest({
+     tool: "list_emails",
+     params: { status: "scheduled" },
+   });
+
+   // Schedule a draft
+   await mcp.handleRequest({
+     tool: "schedule_draft",
+     params: {
+       draftId: "76401f19-8a8b-4f4b-8878-8175c75bd29e",
+       scheduledTime: "2025-03-28T09:15:00Z",
+     },
    });
    ```
 
@@ -143,14 +210,29 @@ The API Integrator project aims to provide a robust, type-safe interface for int
 1. **CLI Usage**
 
    ```bash
-   buttondown list-emails
-   buttondown create-draft
-   buttondown schedule
+   buttondown emails list --status scheduled
+   buttondown draft create
+   buttondown schedule set <draft-id> <iso-datetime>
    ```
 
-2. **ModelContextProtocol**
+2. **Enhanced MCP Features**
+
    ```typescript
-   // Planned implementation
+   // Rate limiting and caching
+   await mcp.handleRequest({
+     tool: "list_emails",
+     params: { status: "scheduled", cache: true },
+   });
+
+   // Progress tracking
+   await mcp.handleRequest({
+     tool: "schedule_draft",
+     params: {
+       draftId,
+       scheduledTime,
+       progress: true,
+     },
+   });
    ```
 
 ## Success Metrics
@@ -161,6 +243,8 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Error handling
    - Response times
    - Uptime
+   - API key validation
+   - Schedule accuracy
 
 2. **Usability**
 
@@ -168,12 +252,16 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Documentation clarity
    - Error messages
    - Integration time
+   - Tool descriptions
+   - Schedule management
 
 3. **Security**
    - Credential safety
    - Data protection
    - Access control
    - Audit capability
+   - Validation efficiency
+   - Schedule verification
 
 ## Future Vision
 
@@ -183,6 +271,8 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Additional integrations
    - Enhanced features
    - Better tooling
+   - Advanced scheduling
+   - Performance optimization
 
 2. **Community**
 
@@ -190,9 +280,13 @@ The API Integrator project aims to provide a robust, type-safe interface for int
    - Documentation
    - Examples
    - Contributions
+   - Tool extensions
+   - Schedule patterns
 
 3. **Enterprise**
    - Advanced features
    - Support
    - Training
    - Customization
+   - Rate limiting
+   - Response caching

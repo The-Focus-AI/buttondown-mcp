@@ -2,11 +2,12 @@
 
 ## Current Focus
 
-Implementing the ModelContextProtocol (MCP) server for the Buttondown API integration.
+Implementing and refining the ModelContextProtocol (MCP) server for the Buttondown API integration, with focus on email listing and scheduling functionality.
 
 ## Recent Changes
 
-- Implemented MCP server with three tools:
+- Implemented MCP server with four tools:
+  - `list_emails`: List all emails with optional status filtering
   - `create_draft`: Create new email drafts
   - `get_analytics`: Retrieve email analytics
   - `schedule_draft`: Schedule email drafts
@@ -14,12 +15,16 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
 - Added tool descriptions and parameter documentation
 - Added MCP inspector support
 - Added build and run scripts for MCP server
+- Improved API key handling to check only during command execution
+- Enhanced email listing to include publish_date and scheduled_for information
+- Successfully implemented and tested email scheduling functionality
 
 ## Current Task: MCP Server Implementation
 
 ### Status
 
 - Core tools implemented:
+  - `list_emails`: List all emails with status filtering ✅
   - `create_draft`: Create new email draft with content and optional title ✅
   - `get_analytics`: Get detailed email analytics ✅
   - `schedule_draft`: Schedule draft for publication ✅
@@ -28,6 +33,8 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
 - Added parameter validation with Zod ✅
 - Added MCP inspector support ✅
 - Added build and run scripts ✅
+- Improved API key handling ✅
+- Enhanced email listing with scheduling information ✅
 
 ### Next Actions
 
@@ -37,6 +44,8 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
    - [x] Add proper error handling
    - [x] Add tool descriptions
    - [x] Add inspector support
+   - [x] Improve API key handling
+   - [x] Enhance email listing
    - [ ] Add tests
    - [ ] Add documentation
    - [ ] Add examples
@@ -47,11 +56,14 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
 
 1. Core Tools
 
+   - [x] List emails tool with status filtering
    - [x] Create draft tool
    - [x] Analytics tool
    - [x] Schedule draft tool
    - [x] Tool descriptions
    - [x] Parameter validation
+   - [x] API key handling improvements
+   - [x] Enhanced email listing
 
 2. Testing & Documentation
 
@@ -61,6 +73,8 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
    - [ ] Example workflows
 
 3. Enhancements
+   - [x] API key handling improvements
+   - [x] Enhanced email listing
    - [ ] Error handling improvements
    - [ ] Response formatting
    - [ ] Rate limiting
@@ -74,6 +88,8 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
 4. Support inspector for testing
 5. Keep consistent error handling
 6. Return structured responses
+7. Check API key only during command execution
+8. Include publish_date and scheduled_for in email listings
 
 ## Considerations
 
@@ -83,6 +99,8 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
    - Intuitive parameters
    - Proper validation
    - Helpful error messages
+   - Efficient API key handling
+   - Comprehensive email information
 
 2. **Testing Strategy**
 
@@ -90,6 +108,8 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
    - Integration tests
    - Inspector testing
    - Error scenarios
+   - API key validation testing
+   - Email scheduling testing
 
 3. **Documentation**
 
@@ -97,11 +117,13 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
    - Parameter documentation
    - Example usage
    - Error handling guide
+   - API key setup guide
 
 4. **Security**
    - Use 1Password for API key
    - Never store API key in code
    - Validate input before API calls
+   - Check API key only when needed
 
 ## Current Challenges
 
@@ -109,6 +131,7 @@ Implementing the ModelContextProtocol (MCP) server for the Buttondown API integr
 2. Improving error messages
 3. Adding progress indicators
 4. Documenting tool usage
+5. Handling edge cases in email scheduling
 
 ## Notes
 
@@ -122,3 +145,5 @@ Remember to:
 - Keep consistent error handling
 - Use 1Password for secrets
 - Return structured responses
+- Include comprehensive email information
+- Validate API key efficiently

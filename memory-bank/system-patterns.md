@@ -9,70 +9,110 @@
    - `ButtondownAPI` class
    - Type-safe request/response handling
    - Error management
-   - Authentication flow
+   - Optimized authentication flow
+   - Lazy API key validation
 
 2. **Type System**
 
    - Interface definitions
    - Response type validation
    - Request type safety
+   - MCP tool schemas
 
 3. **Testing Infrastructure**
+
    - Jest test framework
    - Mock API responses
    - Test fixtures
    - Integration test setup
+   - MCP inspector support
+
+4. **MCP Server Layer**
+   - Tool definitions
+   - Parameter validation
+   - Response formatting
+   - Error handling
+   - Scheduling support
 
 ## Design Patterns
 
 ### Repository Pattern
 
 ```typescript
-class ButtondownAPI {
-  private apiKey: string;
+class ButtondownAPI implements IButtondownAPI {
+  public apiKey: string;
 
   constructor(apiKey?: string) {
     this.apiKey = apiKey || "";
   }
 
-  async initialize() {
+  private async validateApiKey() {
     if (!this.apiKey) {
       this.apiKey = await this.getApiKey();
     }
+    // Validation logic
   }
 
-  async getEmails(): Promise<ButtondownEmailsResponse> {
-    await this.initialize();
-    // API implementation
+  async getEmails(status?: string): Promise<ButtondownEmailsResponse> {
+    await this.validateApiKey();
+    // API implementation with status filtering
+  }
+
+  async scheduleDraft(
+    id: string,
+    scheduledTime: string
+  ): Promise<ButtondownEmail> {
+    await this.validateApiKey();
+    // Scheduling implementation
   }
 }
 ```
 
-### Factory Pattern (Planned)
+### Factory Pattern (Implemented)
 
 - For creating different types of API clients
 - Configurable authentication methods
 - Extensible for future API integrations
+- MCP tool factory methods
 
-### Strategy Pattern (Planned)
+### Strategy Pattern (Implemented)
 
 - For different authentication methods
 - For various response formats
 - For error handling strategies
+- For email scheduling strategies
+
+### Command Pattern (MCP Tools)
+
+- Tool registration
+- Parameter validation
+- Command execution
+- Response formatting
 
 ## Data Flow
 
 ### API Request Flow
 
-1. Client initialization
-2. Authentication check
-3. Request preparation
-4. Content normalization
+1. Tool invocation
+2. Parameter validation
+3. API key validation (when needed)
+4. Request preparation
+5. Content normalization
    - Line break standardization (\r\n -> \n)
    - Markdown formatting preservation
-5. API call
-6. Response handling
-7. Error management
+6. API call
+7. Response formatting
+8. Error management
+
+### MCP Server Flow
+
+1. Tool registration
+2. Request validation
+3. Parameter parsing
+4. API key validation
+5. Command execution
+6. Response formatting
+7. Error handling
 
 ### Testing Flow
 
@@ -80,31 +120,38 @@ class ButtondownAPI {
 2. Mock data preparation
 3. Test execution
 4. Assertion verification
-5. Cleanup
+5. MCP inspector validation
+6. Cleanup
 
 ### Content Handling Patterns
 
 ```typescript
-// Draft content normalization
-async createDraft(draft: CreateDraftRequest): Promise<ButtondownDraft> {
-  await this.initialize();
+// MCP tool implementation
+async function handleListEmails(
+  params: ListEmailsParams
+): Promise<MCPResponse> {
+  const { status } = params;
 
-  // Normalize line breaks to use \n
-  const normalizedBody = draft.body.replace(/\r\n/g, "\n");
+  // Validate API key only when executing command
+  await api.validateApiKey();
 
-  const response = await fetch("https://api.buttondown.email/v1/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Token ${this.apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ...draft,
-      body: normalizedBody,
-    }),
-  });
+  const emails = await api.getEmails(status);
 
-  // ... response handling
+  return formatEmailsResponse(emails);
+}
+
+// Email scheduling implementation
+async function handleScheduleDraft(
+  params: ScheduleDraftParams
+): Promise<MCPResponse> {
+  const { draftId, scheduledTime } = params;
+
+  // Validate API key only when executing command
+  await api.validateApiKey();
+
+  const result = await api.scheduleDraft(draftId, scheduledTime);
+
+  return formatScheduleResponse(result);
 }
 ```
 
@@ -126,6 +173,13 @@ class AuthenticationError extends ButtondownError {
     this.name = "AuthenticationError";
   }
 }
+
+class SchedulingError extends ButtondownError {
+  constructor(message: string) {
+    super(message);
+    this.name = "SchedulingError";
+  }
+}
 ```
 
 ### Error Handling Strategy
@@ -134,6 +188,8 @@ class AuthenticationError extends ButtondownError {
 2. Consistent error messages
 3. Error propagation
 4. Recovery mechanisms
+5. MCP-specific error handling
+6. Scheduling error management
 
 ## Testing Patterns
 
@@ -147,6 +203,8 @@ class AuthenticationError extends ButtondownError {
     {
       "id": "...",
       "subject": "...",
+      "status": "scheduled",
+      "publish_date": "2025-03-28T09:15:00Z",
       // ... other fields
     }
   ]
@@ -156,15 +214,23 @@ class AuthenticationError extends ButtondownError {
 ### Test Structure
 
 ```typescript
-describe("ButtondownAPI", () => {
+describe("ButtondownMCP", () => {
   let api: ButtondownAPI;
+  let mcp: ButtondownMCP;
 
   beforeEach(() => {
     api = new ButtondownAPI();
+    mcp = new ButtondownMCP(api);
   });
 
-  describe("getEmails", () => {
-    it("should fetch emails successfully", async () => {
+  describe("listEmails", () => {
+    it("should list emails with status filter", async () => {
+      // Test implementation
+    });
+  });
+
+  describe("scheduleDraft", () => {
+    it("should schedule draft for publication", async () => {
       // Test implementation
     });
   });
@@ -179,6 +245,8 @@ describe("ButtondownAPI", () => {
 2. Environment variable fallback
 3. Secure storage
 4. No hardcoded values
+5. Lazy API key validation
+6. Command-specific validation
 
 ### API Security
 
@@ -186,6 +254,8 @@ describe("ButtondownAPI", () => {
 2. Header-based authentication
 3. Rate limiting (planned)
 4. Request validation
+5. Schedule validation
+6. Status validation
 
 ## Performance Patterns
 
@@ -195,6 +265,8 @@ describe("ButtondownAPI", () => {
 2. Rate limiting (planned)
 3. Resource cleanup
 4. Memory management
+5. Lazy API key validation
+6. Efficient scheduling
 
 ### Testing Optimization
 
@@ -202,15 +274,19 @@ describe("ButtondownAPI", () => {
 2. Test isolation
 3. Efficient setup/teardown
 4. Parallel test execution
+5. MCP inspector optimization
+6. Schedule testing patterns
 
 ## Future Patterns
 
 ### Planned Extensions
 
-1. CLI interface
-2. ModelContextProtocol integration
-3. Additional API endpoints
-4. Advanced error handling
+1. CLI interface enhancements
+2. Additional MCP tools
+3. Advanced scheduling features
+4. Enhanced error handling
+5. Rate limiting implementation
+6. Response caching
 
 ### Scalability Considerations
 
@@ -218,3 +294,5 @@ describe("ButtondownAPI", () => {
 2. Extensible type system
 3. Configurable components
 4. Plugin system (planned)
+5. Tool composition
+6. Schedule management
