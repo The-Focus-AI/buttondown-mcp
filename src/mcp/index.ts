@@ -61,12 +61,52 @@ export class ButtondownMCPServer {
       },
       async ({ status }) => {
         await this.ensureApiKey();
-        const response = await this.api.listDrafts();
+        let response;
+
+        switch (status) {
+          case "draft":
+            response = await this.api.listDrafts();
+            break;
+          case "scheduled":
+            response = await this.api.listScheduledEmails();
+            break;
+          case "sent":
+            response = await this.api.listSentEmails();
+            break;
+          default:
+            // If no status specified, list all drafts by default
+            response = await this.api.listDrafts();
+        }
+
+        // Format the response to be more readable
+        const formattedEmails = response.results.map((email) => ({
+          id: email.id,
+          subject: email.subject || "Untitled",
+          status: email.status,
+          created: email.creation_date,
+          scheduled_for: email.scheduled_for || null,
+          publish_date: email.publish_date || null,
+          analytics: email.analytics
+            ? {
+                recipients: email.analytics.recipients,
+                opens: email.analytics.opens,
+                clicks: email.analytics.clicks,
+              }
+            : null,
+        }));
+
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify(response, null, 2),
+              text: JSON.stringify(
+                {
+                  total: response.count,
+                  emails: formattedEmails,
+                },
+                null,
+                2
+              ),
             },
           ],
         };

@@ -12,6 +12,8 @@ interface APIError {
 export interface IButtondownAPI {
   apiKey: string;
   listDrafts(): Promise<ButtondownEmailsResponse>;
+  listScheduledEmails(): Promise<ButtondownEmailsResponse>;
+  listSentEmails(): Promise<ButtondownEmailsResponse>;
   createDraft(content: string, title?: string): Promise<ButtondownEmail>;
   getAnalytics(emailId: string): Promise<ButtondownAnalytics>;
   scheduleDraft(
@@ -60,7 +62,15 @@ export class ButtondownAPI implements IButtondownAPI {
   }
 
   async listDrafts(): Promise<ButtondownEmailsResponse> {
-    return this.request<ButtondownEmailsResponse>("/emails");
+    return this.request<ButtondownEmailsResponse>("/emails?status=draft");
+  }
+
+  async listScheduledEmails(): Promise<ButtondownEmailsResponse> {
+    return this.request<ButtondownEmailsResponse>("/emails?status=scheduled");
+  }
+
+  async listSentEmails(): Promise<ButtondownEmailsResponse> {
+    return this.request<ButtondownEmailsResponse>("/emails?status=sent");
   }
 
   async createDraft(content: string, title?: string): Promise<ButtondownEmail> {
@@ -86,6 +96,7 @@ export class ButtondownAPI implements IButtondownAPI {
       method: "PATCH",
       body: JSON.stringify({
         scheduled_for: scheduledTime,
+        publish_date: scheduledTime,
         status: "scheduled",
       }),
     });
