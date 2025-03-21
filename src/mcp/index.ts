@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { ButtondownAPI } from "../buttondown.js";
+import { ButtondownAPI, IButtondownAPI } from "../api/client.js";
 import { execSync } from "child_process";
 
 async function getApiKey(): Promise<string> {
@@ -28,9 +28,9 @@ async function getApiKey(): Promise<string> {
 
 export class ButtondownMCPServer {
   private server: McpServer;
-  private api: ButtondownAPI;
+  private api: IButtondownAPI;
 
-  constructor(api: ButtondownAPI) {
+  constructor(api: IButtondownAPI) {
     this.api = api;
     this.server = new McpServer({
       name: "Buttondown",
@@ -39,6 +39,13 @@ export class ButtondownMCPServer {
 
     // Register tools
     this.registerTools();
+  }
+
+  private async ensureApiKey(): Promise<void> {
+    if (!this.api.apiKey) {
+      const apiKey = await getApiKey();
+      this.api.apiKey = apiKey;
+    }
   }
 
   private registerTools() {
@@ -52,44 +59,14 @@ export class ButtondownMCPServer {
           .optional()
           .describe("Optional status to filter emails by"),
       },
-      async (args: { status?: "draft" | "scheduled" | "sent" }) => {
-        let response;
-        if (args.status === "draft") {
-          response = await this.api.getDrafts();
-        } else if (args.status === "scheduled") {
-          response = await this.api.getScheduledEmails();
-        } else {
-          response = await this.api.getEmails();
-        }
-
-        // Format the response to be more readable
-        const formattedEmails = response.results.map((email) => ({
-          id: email.id,
-          subject: email.subject,
-          status: email.status,
-          created: email.creation_date,
-          scheduled_for: email.scheduled_for,
-          analytics: email.analytics
-            ? {
-                recipients: email.analytics.recipients,
-                opens: email.analytics.opens,
-                clicks: email.analytics.clicks,
-              }
-            : null,
-        }));
-
+      async ({ status }) => {
+        await this.ensureApiKey();
+        const response = await this.api.listDrafts();
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify(
-                {
-                  total: response.count,
-                  emails: formattedEmails,
-                },
-                null,
-                2
-              ),
+              text: JSON.stringify(response, null, 2),
             },
           ],
         };
@@ -109,12 +86,9 @@ export class ButtondownMCPServer {
           .optional()
           .describe("Optional title/subject for the email draft"),
       },
-      async (args: { content: string; title?: string }) => {
-        const response = await this.api.createEmail({
-          body: args.content,
-          subject: args.title || "Untitled Draft",
-          status: "draft",
-        });
+      async ({ content, title }) => {
+        await this.ensureApiKey();
+        const response = await this.api.createDraft(content, title);
         return {
           content: [
             {
@@ -135,13 +109,14 @@ export class ButtondownMCPServer {
           .string()
           .describe("The ID of the email draft to get analytics for"),
       },
-      async (args: { draftId: string }) => {
-        const email = await this.api.getEmail(args.draftId);
+      async ({ draftId }) => {
+        await this.ensureApiKey();
+        const response = await this.api.getAnalytics(draftId);
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify(email.analytics, null, 2),
+              text: JSON.stringify(response, null, 2),
             },
           ],
         };
@@ -158,11 +133,9 @@ export class ButtondownMCPServer {
           .string()
           .describe("When to send the email (ISO 8601 datetime format)"),
       },
-      async (args: { draftId: string; scheduledTime: string }) => {
-        const response = await this.api.updateEmail(args.draftId, {
-          scheduled_for: args.scheduledTime,
-          status: "scheduled",
-        });
+      async ({ draftId, scheduledTime }) => {
+        await this.ensureApiKey();
+        const response = await this.api.scheduleDraft(draftId, scheduledTime);
         return {
           content: [
             {
