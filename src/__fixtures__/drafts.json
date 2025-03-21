@@ -1,0 +1,65 @@
+{
+  "results": [
+    {
+      "id": "116ebc92-ada0-4c61-8b94-ee9eba27b262",
+      "creation_date": "2025-03-20T19:50:25.099056Z",
+      "modification_date": "2025-03-20T19:53:12.953555Z",
+      "publish_date": null,
+      "attachments": [],
+      "subject": "Introducing the Buttondown API Integrator",
+      "canonical_url": "",
+      "image": "",
+      "description": "A powerful TypeScript client for managing your Buttondown newsletters programmatically",
+      "source": "api",
+      "body": "<!-- buttondown-editor-mode: plaintext -->\\# Introducing the Buttondown API Integrator We're excited to announce the release of the Buttondown API Integrator, a powerful TypeScript client that makes it easy to manage your Buttondown newsletters programmatically. ## What is it? The Buttondown API Integrator is a developer-friendly tool that provides: - Type-safe API interactions - Secure credential management via 1Password - Comprehensive testing support - CLI interface for easy newsletter management ## Key Features ### Type Safety Built with TypeScript, the API Integrator ensures type safety throughout your newsletter management workflow. Say goodbye to runtime errors and hello to compile-time confidence. ### Secure Authentication We've integrated with 1Password for secure credential management, making it easy to manage your API keys without compromising security. ### Testing Support The tool comes with a robust testing framework, including: - Unit tests - Integration tests - Mock API responses - Test fixtures ### CLI Interface Coming soon! A command-line interface that will make it easy to: - Create and manage drafts - Schedule newsletters - Track analytics - Manage subscribers ## Getting Started ```typescript import { ButtondownAPI } from \"@focus-ai/api-integrator\"; const api = new ButtondownAPI(); const emails = await api.getEmails(); ``` ## What's Next? We're working on additional features including: - Draft management - Scheduling system - Analytics retrieval - CLI interface - ModelContextProtocol integration Stay tuned for updates! --- _This newsletter was created using the Buttondown API Integrator_",
+      "secondary_id": null,
+      "email_type": "public",
+      "slug": "introducing-the-buttondown-api-integrator",
+      "status": "draft",
+      "metadata": {},
+      "commenting_mode": "enabled",
+      "absolute_url": "https://newsletter.thefocus.ai/archive/introducing-the-buttondown-api-integrator/",
+      "filters": {
+        "filters": [],
+        "groups": [],
+        "predicate": "and"
+      },
+      "analytics": null,
+      "template": null,
+      "related_email_ids": [],
+      "is_comments_disabled": false
+    },
+    {
+      "id": "2e9320a3-f4fb-483e-9075-86efbe9e86da",
+      "creation_date": "2025-03-20T19:56:48.813412Z",
+      "modification_date": "2025-03-20T19:56:48.813472Z",
+      "publish_date": null,
+      "attachments": [],
+      "subject": "Introducing the Buttondown API Integrator",
+      "canonical_url": "",
+      "image": "",
+      "description": "A powerful TypeScript client for managing your Buttondown newsletters programmatically",
+      "source": "api",
+      "body": "# Introducing the Buttondown API Integrator\n\nWe're excited to announce the release of the Buttondown API Integrator, a powerful TypeScript client that makes it easy to manage your Buttondown newsletters programmatically.\n\n## What is it?\n\nThe Buttondown API Integrator is a developer-friendly tool that provides:\n\n- Type-safe API interactions\n- Secure credential management via 1Password\n- Comprehensive testing support\n- CLI interface for easy newsletter management\n\n## Key Features\n\n### Type Safety\n\nBuilt with TypeScript, the API Integrator ensures type safety throughout your newsletter management workflow. Say goodbye to runtime errors and hello to compile-time confidence.\n\n### Secure Authentication\n\nWe've integrated with 1Password for secure credential management, making it easy to manage your API keys without compromising security.\n\n### Testing Support\n\nThe tool comes with a robust testing framework, including:\n\n- Unit tests\n- Integration tests\n- Mock API responses\n- Test fixtures\n\n### CLI Interface\n\nComing soon! A command-line interface that will make it easy to:\n\n- Create and manage drafts\n- Schedule newsletters\n- Track analytics\n- Manage subscribers\n\n## Getting Started\n\n```typescript\nimport { ButtondownAPI } from \"@focus-ai/api-integrator\";\n\nconst api = new ButtondownAPI();\nconst emails = await api.getEmails();\n```\n\n## What's Next?\n\nWe're working on additional features including:\n\n- Draft management\n- Scheduling system\n- Analytics retrieval\n- CLI interface\n- ModelContextProtocol integration\n\nStay tuned for updates!\n\n---\n\n_This newsletter was created using the Buttondown API Integrator_\n",
+      "secondary_id": null,
+      "email_type": "public",
+      "slug": "introducing-the-buttondown-api-integrator-1664",
+      "status": "draft",
+      "metadata": {},
+      "commenting_mode": "enabled",
+      "absolute_url": "https://newsletter.thefocus.ai/archive/introducing-the-buttondown-api-integrator-1664/",
+      "filters": {
+        "filters": [],
+        "groups": [],
+        "predicate": "and"
+      },
+      "analytics": null,
+      "template": null,
+      "related_email_ids": [],
+      "is_comments_disabled": false
+    }
+  ],
+  "next": null,
+  "previous": null,
+  "count": 2
+}

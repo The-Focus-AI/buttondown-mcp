@@ -1,0 +1,49 @@
+# Cursor Memories and Preferences
+
+This file stores important memories and preferences that should be remembered across sessions. It is automatically updated whenever the user says "remember" something.
+
+## Structure
+
+Each memory or preference is stored with:
+
+- Date added
+- Category
+- Content
+- Context (if relevant)
+
+## Memories
+
+### Project-Specific
+
+- [No memories yet]
+
+### User Preferences
+
+- Date: 2024-03-26
+  Category: Package Manager
+  Content: Always use pnpm as the package manager
+  Context: This is the preferred package manager for all Node.js projects
+
+### Technical Decisions
+
+- Date: 2024-03-26
+  Category: API Development
+  Content: When building an API, always directly hit the API and store the results in a directory, and then build the types based upon the results
+  Context: This approach ensures type definitions are based on actual API responses rather than theoretical structures
+
+### Workflow Patterns
+
+- [No patterns yet]
+
+## How to Use
+
+When the user says "remember" something:
+
+1. Add the new memory/preference to the appropriate section
+2. Include the date it was added
+3. Add any relevant context
+4. Format it clearly for future reference
+
+## Last Updated
+
+2024-03-26

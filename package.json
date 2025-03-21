@@ -1,0 +1,46 @@
+{
+  "name": "api-integrator",
+  "version": "0.1.0",
+  "description": "A TypeScript client for the Buttondown API",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "buttondown": "dist/cli/index.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "test-api": "ts-node src/test-api.ts",
+    "test-drafts": "ts-node src/test-drafts.ts",
+    "download-data": "ts-node src/download-data.ts",
+    "fetch-api-responses": "ts-node src/scripts/fetch-api-responses.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "mcp:build": "tsc -p tsconfig.json",
+    "mcp:start": "node dist/mcp/server.js",
+    "mcp:inspect": "npx @modelcontextprotocol/inspector node dist/mcp/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.1",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.24",
+    "@typescript-eslint/eslint-plugin": "^8.27.0",
+    "@typescript-eslint/parser": "^8.27.0",
+    "eslint": "^9.22.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "@types/node-fetch": "^2.6.12",
+    "cmd-ts": "^0.13.0",
+    "front-matter": "^4.0.2",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.24.2"
+  }
+}

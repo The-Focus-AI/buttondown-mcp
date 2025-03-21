@@ -1,0 +1,29 @@
+{
+  "id": "b5297223-afe3-4612-b3ea-234b3e48f88b",
+  "creation_date": "2025-03-21T04:23:58.191885Z",
+  "modification_date": "2025-03-21T04:23:58.191978Z",
+  "publish_date": null,
+  "attachments": [],
+  "subject": "Test Draft Email",
+  "canonical_url": "",
+  "image": "",
+  "description": "",
+  "source": "api",
+  "body": "This is a test draft email created by the API client.",
+  "secondary_id": null,
+  "email_type": "public",
+  "slug": "test-draft-email",
+  "status": "draft",
+  "metadata": {},
+  "commenting_mode": "enabled",
+  "absolute_url": "https://newsletter.thefocus.ai/archive/test-draft-email/",
+  "filters": {
+    "filters": [],
+    "groups": [],
+    "predicate": "and"
+  },
+  "analytics": null,
+  "template": null,
+  "related_email_ids": [],
+  "is_comments_disabled": false
+}
