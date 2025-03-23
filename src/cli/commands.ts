@@ -1,6 +1,7 @@
 import { command, string, positional, option, flag, subcommands } from "cmd-ts";
 import { ButtondownAPI } from "../api/client.js";
 import fs from "fs";
+import { z } from "zod";
 
 // Create Draft Command
 export const createDraftCommand = command({
@@ -17,15 +18,31 @@ export const createDraftCommand = command({
       description: "Optional title for the draft",
       defaultValue: () => "",
     }),
+    confirm: flag({
+      long: "confirm",
+      description: "Confirm the draft creation",
+      defaultValue: () => false,
+    }),
   },
-  handler: async ({ file, title }) => {
+  handler: async ({ file, title, confirm }) => {
+    if (!confirm) {
+      console.log("Preview of draft to be created:");
+      console.log(`Title: ${title || "Untitled"}`);
+      console.log(
+        `Content length: ${fs.readFileSync(file, "utf-8").length} characters`
+      );
+      console.log(
+        "\nPlease ask the user if they want to create this draft. If they agree, run with --confirm"
+      );
+      return { _tag: "ok", value: { file, title, confirmed: false } };
+    }
     console.log("Creating draft...", file, title);
     try {
       const api = new ButtondownAPI();
       const content = fs.readFileSync(file, "utf-8");
       const draft = await api.createDraft(content, title || undefined);
       console.log(`Created draft: ${draft.id}`);
-      return { _tag: "ok", value: { file, title } };
+      return { _tag: "ok", value: { file, title, confirmed: true } };
     } catch (error) {
       console.error("Failed to create draft:", error);
       return { _tag: "error", error };
@@ -47,13 +64,31 @@ export const scheduleDraftCommand = command({
       displayName: "time",
       description: "Scheduled time (ISO-8601 or relative like +2h)",
     }),
+    confirm: flag({
+      long: "confirm",
+      description: "Confirm the scheduling",
+      defaultValue: () => false,
+    }),
   },
-  handler: async ({ draftId, scheduledTime }) => {
+  handler: async ({ draftId, scheduledTime, confirm }) => {
+    if (!confirm) {
+      console.log("Preview of scheduling:");
+      console.log(`Draft ID: ${draftId}`);
+      console.log(`Scheduled time: ${scheduledTime}`);
+      console.log(`Local time: ${new Date(scheduledTime).toLocaleString()}`);
+      console.log(
+        "\nPlease ask the user if they want to schedule this draft. If they agree, run with --confirm"
+      );
+      return {
+        _tag: "ok",
+        value: { draftId, scheduledTime, confirmed: false },
+      };
+    }
     try {
       const api = new ButtondownAPI();
       const result = await api.scheduleDraft(draftId, scheduledTime);
       console.log(`Scheduled draft ${draftId} for ${scheduledTime}`);
-      return { _tag: "ok", value: { draftId, scheduledTime } };
+      return { _tag: "ok", value: { draftId, scheduledTime, confirmed: true } };
     } catch (error) {
       console.error("Failed to schedule draft:", error);
       return { _tag: "error", error };

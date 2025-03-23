@@ -116,7 +116,7 @@ export class ButtondownMCPServer {
     // Create draft tool
     this.server.tool(
       "create_draft",
-      "Create a new email draft in Buttondown with the specified content and optional title",
+      "Create a new email draft in Buttondown with the specified content and optional title. This tool requires explicit user confirmation before proceeding as it will create a new draft in your Buttondown account.",
       {
         content: z
           .string()
@@ -125,8 +125,33 @@ export class ButtondownMCPServer {
           .string()
           .optional()
           .describe("Optional title/subject for the email draft"),
+        confirmed: z
+          .boolean()
+          .describe("Must be true to confirm the draft creation"),
       },
-      async ({ content, title }) => {
+      async ({ content, title, confirmed }) => {
+        if (!confirmed) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    error: "User confirmation required",
+                    message:
+                      "Please ask the user if they want to create this draft and set confirmed=true if they agree",
+                    preview: {
+                      title: title || "Untitled",
+                      content_length: content.length,
+                    },
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+          };
+        }
         await this.ensureApiKey();
         const response = await this.api.createDraft(content, title);
         return {
@@ -166,14 +191,40 @@ export class ButtondownMCPServer {
     // Schedule draft tool
     this.server.tool(
       "schedule_draft",
-      "Schedule an existing email draft to be sent at a specific time",
+      "Schedule an existing email draft to be sent at a specific time. This tool requires explicit user confirmation before proceeding as it will modify the draft's status and schedule.",
       {
         draftId: z.string().describe("The ID of the email draft to schedule"),
         scheduledTime: z
           .string()
           .describe("When to send the email (ISO 8601 datetime format)"),
+        confirmed: z
+          .boolean()
+          .describe("Must be true to confirm the scheduling"),
       },
-      async ({ draftId, scheduledTime }) => {
+      async ({ draftId, scheduledTime, confirmed }) => {
+        if (!confirmed) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    error: "User confirmation required",
+                    message:
+                      "Please ask the user if they want to schedule this draft and set confirmed=true if they agree",
+                    preview: {
+                      draftId,
+                      scheduledTime,
+                      localTime: new Date(scheduledTime).toLocaleString(),
+                    },
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+          };
+        }
         await this.ensureApiKey();
         const response = await this.api.scheduleDraft(draftId, scheduledTime);
         return {

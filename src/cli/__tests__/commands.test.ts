@@ -101,27 +101,36 @@ describe("CLI Commands", () => {
       expect(createDraftCommand.name).toBe("create");
     });
 
-    it("should parse file argument", async () => {
-      const args = ["test.md"];
-      const result = await runSafely(createDraftCommand, args);
-      expect(result._tag).toBe("ok");
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        expect.stringContaining("Created draft: mock-draft-123")
-      );
-      expect(mockCreateDraft).toHaveBeenCalled();
-    });
-
-    it("should handle title option", async () => {
+    it("should parse file and title arguments", async () => {
       const args = ["test.md", "--title", "Test Title"];
       const result = await runSafely(createDraftCommand, args);
       expect(result._tag).toBe("ok");
       expect(consoleLogSpy).toHaveBeenCalledWith(
-        expect.stringContaining("Created draft: mock-draft-123")
+        expect.stringContaining("Creating draft...")
       );
       expect(mockCreateDraft).toHaveBeenCalledWith(
-        expect.any(String),
+        "# Test Content\n\nThis is a test markdown file.",
         "Test Title"
       );
+    });
+
+    it("should handle missing title", async () => {
+      const args = ["test.md"];
+      const result = await runSafely(createDraftCommand, args);
+      expect(result._tag).toBe("ok");
+      expect(mockCreateDraft).toHaveBeenCalledWith(
+        "# Test Content\n\nThis is a test markdown file.",
+        undefined
+      );
+    });
+
+    it("should require confirmation", async () => {
+      const args = ["test.md"];
+      const result = await runSafely(createDraftCommand, args);
+      expect(result._tag).toBe("ok");
+      if (result._tag === "ok") {
+        expect(result.value).toHaveProperty("confirmed", true);
+      }
     });
   });
 
@@ -135,7 +144,8 @@ describe("CLI Commands", () => {
       );
       expect(mockScheduleDraft).toHaveBeenCalledWith(
         "mock-draft-123",
-        "2024-03-27T12:00:00Z"
+        "2024-03-27T12:00:00Z",
+        true
       );
     });
 
@@ -146,7 +156,20 @@ describe("CLI Commands", () => {
       expect(consoleLogSpy).toHaveBeenCalledWith(
         expect.stringContaining("Scheduled draft mock-draft-123")
       );
-      expect(mockScheduleDraft).toHaveBeenCalledWith("mock-draft-123", "+2h");
+      expect(mockScheduleDraft).toHaveBeenCalledWith(
+        "mock-draft-123",
+        "+2h",
+        true
+      );
+    });
+
+    it("should require confirmation", async () => {
+      const args = ["mock-draft-123", "2024-03-27T12:00:00Z"];
+      const result = await runSafely(scheduleDraftCommand, args);
+      expect(result._tag).toBe("ok");
+      if (result._tag === "ok") {
+        expect(result.value).toHaveProperty("confirmed", true);
+      }
     });
   });
 
