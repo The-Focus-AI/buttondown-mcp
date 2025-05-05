@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/the-focus-ai-buttondown-mcp-badge.png)](https://mseep.ai/app/the-focus-ai-buttondown-mcp)
+
 # Buttondown API Integration
 
 A comprehensive TypeScript integration for the Buttondown newsletter service, providing both a CLI interface and a Model Context Protocol (MCP) server for managing newsletters, drafts, and analytics.
