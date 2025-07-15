@@ -3,7 +3,6 @@ description:
 globs: 
 alwaysApply: true
 ---
-
 # STRICT RULES:
 
 - ALWAYS FETCH ALL OF THE RULES
@@ -12,43 +11,69 @@ alwaysApply: true
 - search codebase first, then write code
 - Ensure code is complete! Verify thoroughly finalized.
 - If you think there might not be a correct answer, you say so.
-- always cross reference @tech-context.md @active-context.md @tech-context.md and @progress.md
-- at the end of each interaction, look for relavent information and keep @tech-context.md @active-context.md @tech-context.md and @progress.md
+- always cross reference @tech-context.md @active-context.md @tech-context.md and @progress.md and @lessons-learned.md
+- at the end of each interaction, look for relavent information and keep @tech-context.md @active-context.md @tech-context.md and @progress.md @lessons-learned.md
+- when making a time stamp run the date command to get the current time
 
 ### Core files
 
+1. Progress Tracking Rules:
+- Use ONLY these markers:
+  [X] = Completed (100% done, verified)
+  [-] = In Progress (actively being worked on)
+  [ ] = Planned (not started)
+  [!] = Blocked (has dependencies)
+  [?] = Needs Review (requires verification)
+
 memory/project-brief.md
+
 - Comprehensive document describing what we are building
-- If the @project-brief.md doesn't exist, ask the use if they want to run @briefing.mdc
+- If the @project-brief.md doesn't exist, ask the use if they want to run the [Project Briefing Task]
 
 memory/project-plan.md
+
 - Contains the iterative steps to make project
+- Mark status
 
 memory/product-context.md
+
 - Why this project exists
 - Problems it solves
 - How it should work
 - User experience goals
+- This will be helpful in updating the documentation
 
 memory/tech-context.md
+
 - Technology Used
 - Development Setup
 - Technical Contraints
-- dependancies
+- Depedancies
+
 
 memory/active-context.md
+
 - Current work focus
 - Recent changes
 - Next steps
 - Active decisions and considerations
 - Current chunk being implemented
 - Progress through the project plan
+- mark status
+
+memory/lessons-learned.md
+
+- History of lessons that we've learned during this project
 
 memory/progress.md
+
 - what works
 - what is left to build
 - current status
 - known issues
+
+memory/work-log.md
+- Updated after each interaction with the user
 
 
 ### Relationships
@@ -65,26 +90,106 @@ flowchart TD
   PP --> AC
 
   AC --> PG[progress.md]
-  ```
+```
 
-### project briefing
+## Tasks
 
-In order to greate @project-brief.md, Ask me one question at a time 
+When the user asks to run tasks, focus in on this.
+
+### Project Briefing Task
+
+In order to greate @project-brief.md, Ask me one question at a time
 so we can develop a thorough, step-by-step spec for this idea.
-Each question should build on my previous answers, and our end goal is to have a detailed
-specification I can hand off to a developer. Let's do this iteratively and dig into every
-relevant detail. Remember, only one question at a time.
+Each question should build on my previous answers, and our end goal 
+is to have a detailed specification I can hand off to a developer. 
+Let's do this iteratively and dig into every relevant detail. Remember, 
+only one question at a time.
 
-Once we've come to a good conclusion, or once we are ready to wrap up the brainstorming process,
-compile our findings into a comprehensive, developer-ready specification? Include all relevant
-requirements, architecture choices, data handling details, error handling strategies, and a
-testing plan so a developer can immediately begin implementation.
+Once we've come to a good conclusion, or once we are ready to wrap up the
+brainstorming process, compile our findings into a comprehensive, 
+developer-ready specification? Include all relevant requirements, 
+architecture choices, data handling details, error handling strategies, 
+and a testing plan so a developer can immediately begin implementation.
 
-Put this into memory/project-brief.md
+Put this into memory/project-brief.md and start the project planning task
 
-Once the @project-brief.md is written, develop a @project-plan.md and update the result of the memory
+### Project Planning Task
 
-If you update @project-brief.md for any reason later, make sure that you update everything
+Once the @project-brief.md is written, develop a @project-plan.md 
+
+First, review all of the existing code and match it to the requirements.
+
+Draft a detailed, step-by-step blueprint for building this project. Then, 
+once you have a solid plan, break it down into small, iterative chunks 
+that build on each other. Look at these chunks and then go another round 
+to break it into small steps. Review the results and make sure that the 
+steps are small enough to be implemented safely with strong testing, but 
+big enough to move the project forward. Iterate until you feel that the 
+steps are right sized for this project.
+
+From here you should have the foundation to provide a series of prompts 
+for a code-generation LLM that will implement each step in a test-driven 
+manner. Prioritize best practices, incremental progress, and early testing,
+ ensuring no big jumps in complexity at any stage. Make sure that each 
+ prompt builds on the previous prompts, and ends with wiring things 
+ together. There should be no hanging or orphaned code that isn't 
+ integrated into a previous step.
+
+Make sure and separate each prompt section. Use markdown. Each prompt 
+should be tagged as text using code tags. The goal is to output prompts, 
+but context, etc is important as well.
+
+## Feature Planning Task
+
+If the user asks to develop a new feature, always work out the plan first
+show it to the user, and then ask if there are anything they want to change.
+
+Use a confidence level to say how comfortable you are with the solution, and
+if it's low list out all potential concerns
+
+## Updating Lessons Learned Task
+
+The @lessons-learned.md file serves as a critical knowledge base for capturing, 
+documenting, and sharing development insights, solutions, and best practices. 
+Each lesson must be documented in a comprehensive, single-line format that includes: 
+[Timestamp] Category: Detailed description of issue → Complete solution → Clear explanation of importance and impact. 
+
+For example: "[2024-02-08 16:20] Component Error: Issue: TextInput props incompatible with 
+DatePicker causing type errors during component composition → Fix: Implemented strict prop 
+type validation and interface checks before component extension → Why: Critical for 
+preventing runtime type mismatches and ensuring component reusability." 
+
+Follow a strict priority system where Critical issues (security vulnerabilities, data 
+integrity problems, breaking changes, severe performance bottlenecks) must be addressed 
+immediately, Important items (accessibility improvements, code organization needs, testing 
+coverage gaps, documentation updates) should be handled in near-term sprints, and 
+Enhancement suggestions (style optimizations, refactoring opportunities, developer 
+experience improvements) can be addressed when resources permit. 
+Capture lessons after bug resolutions (documenting root cause and solution), 
+during code reviews (noting patterns and improvements), 
+from user feedback (recording usability insights), 
+following performance optimizations (logging techniques), 
+and when establishing new patterns (documenting reusable solutions). 
+Each entry must include Problem description (what went wrong), 
+Solution details (how it was fixed), 
+Prevention strategy (how to avoid future occurrences), 
+Impact assessment (why it matters), Code examples (when applicable), and 
+Related file/commit references. 
+
+Entries must be categorized under Component Development (architecture, props, state, events), 
+TypeScript Implementation (types, interfaces, generics, guards), 
+Error Resolution (patterns, debugging, prevention), 
+Performance Optimization (load time, runtime, memory, network), 
+Security Practices (data protection, validation, auth), 
+Accessibility Standards (ARIA, keyboard, screen readers), 
+Code Organization (structure, patterns, modules), and 
+Testing Strategies (unit, integration, E2E). 
+Update protocol requires evaluating importance, writing clear actionable entries, providing relevant examples, cross-referencing with memories, checking for duplicates, verifying solutions, ensuring reusability, and appropriate tagging.
+
+### Update project status Task
+
+After any contained tasks is completed add it to the @work-log.md, then @active-context.md
+and then @progress.md and make any changes to @tech-context.md and @deployment-guide.md as needed
 
 ## IMPORTANT
 
