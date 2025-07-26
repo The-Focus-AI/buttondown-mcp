@@ -2,6 +2,10 @@
 
 A comprehensive TypeScript integration for the Buttondown newsletter service, providing both a CLI interface and a Model Context Protocol (MCP) server for managing newsletters, drafts, and analytics.
 
+<a href="https://glama.ai/mcp/servers/@The-Focus-AI/buttondown-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@The-Focus-AI/buttondown-mcp/badge" alt="Buttondown Server MCP server" />
+</a>
+
 ## Features
 
 - **Multiple Interfaces**:
